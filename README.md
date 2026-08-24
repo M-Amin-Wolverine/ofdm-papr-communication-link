@@ -333,6 +333,75 @@ This project is released under the MIT License.
 
 ---
 
+## Project Status
+
+### Current development stages:
+
+```
+[*] Literature Review
+[*] Standard Selection
+[*] Parameter Definition
+[*] Project Skeleton
+[ ] Source Module
+[ ] CRC
+[ ] Channel Coding
+[ ] Interleaver
+[ ] Modulation
+[ ] OFDM Modulator
+[ ] Baseline Channel
+[ ] Equalizer
+[ ] OFDM Demodulator
+[ ] Channel Decoder
+[ ] End-to-End Validation
+[ ] PAPR Measurement
+[ ] Clipping
+[ ] SLM
+[ ] PTS
+[ ] Tone Reservation
+[ ] BER Analyzer
+[ ] CCDF Analyzer
+[ ] EVM Analyzer
+[ ] PSD Analyzer
+[ ] Throughput Analyzer
+[ ] Parameter Sweeps
+[ ] CFO
+[ ] Timing Offset
+[ ] Doppler
+[ ] Power Amplifier
+[ ] Link Budget
+[ ] GUI
+[ ] Final Report
+```
+
+## Contribution
+
+### Contributions are welcome for:
+
+- New PAPR reduction algorithms
+- Channel models
+- Equalization techniques
+- Modulation schemes
+- Visualization tools
+- Optimization methods
+- Testing
+- Documentation
+
+**Before submitting major changes, please open an issue describing the proposed modification.**
+
+## Disclaimer
+
+### This project is intended primarily for:
+
+* Academic research
+* Educational purposes
+* Communication-system simulation
+* Algorithm comparison
+* Reproducible experimentation
+
+**Simulation results should not automatically be interpreted as measurements of a physical RF system.**
+
+Real-world implementations require consideration of hardware limitations, RF impairments, regulatory constraints, synchronization mechanisms, antenna characteristics, amplifier behavior, and measurement uncertainty.
+
 ## Author
 
 **Mohammad Amin Khodadadi**
