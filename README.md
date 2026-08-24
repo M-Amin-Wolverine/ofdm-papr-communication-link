@@ -337,39 +337,39 @@ This project is released under the MIT License.
 
 ### Current development stages:
 
-- [*] Literature Review
-- [*] Standard Selection
-- [*] Parameter Definition
-- [*] Project Skeleton
-[ ] Source Module
-[ ] CRC
-[ ] Channel Coding
-[ ] Interleaver
-[ ] Modulation
-[ ] OFDM Modulator
-[ ] Baseline Channel
-[ ] Equalizer
-[ ] OFDM Demodulator
-[ ] Channel Decoder
-[ ] End-to-End Validation
-[ ] PAPR Measurement
-[ ] Clipping
-[ ] SLM
-[ ] PTS
-[ ] Tone Reservation
-[ ] BER Analyzer
-[ ] CCDF Analyzer
-[ ] EVM Analyzer
-[ ] PSD Analyzer
-[ ] Throughput Analyzer
-[ ] Parameter Sweeps
-[ ] CFO
-[ ] Timing Offset
-[ ] Doppler
-[ ] Power Amplifier
-[ ] Link Budget
-[ ] GUI
-[ ] Final Report
+- [x] Literature Review
+- [x] Standard Selection
+- [x] Parameter Definition
+- [x] Project Skeleton
+- [ ] Source Module
+- [ ] CRC
+- [ ] Channel Coding
+- [ ] Interleaver
+- [ ] Modulation
+- [ ] OFDM Modulator
+- [ ] Baseline Channel
+- [ ] Equalizer
+- [ ] OFDM Demodulator
+- [ ] Channel Decoder
+- [ ] End-to-End Validation
+- [ ] PAPR Measurement
+- [ ] Clipping
+- [ ] SLM
+- [ ] PTS
+- [ ] Tone Reservation
+- [ ] BER Analyzer
+- [ ] CCDF Analyzer
+- [ ] EVM Analyzer
+- [ ] PSD Analyzer
+- [ ] Throughput Analyzer
+- [ ] Parameter Sweeps
+- [ ] CFO
+- [ ] Timing Offset
+- [ ] Doppler
+- [ ] Power Amplifier
+- [ ] Link Budget
+- [ ] GUI
+- [ ] Final Report
 
 
 ## Contribution
