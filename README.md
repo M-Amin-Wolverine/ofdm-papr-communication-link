@@ -337,7 +337,6 @@ This project is released under the MIT License.
 
 ### Current development stages:
 
-```
 [*] Literature Review
 [*] Standard Selection
 [*] Parameter Definition
@@ -371,7 +370,7 @@ This project is released under the MIT License.
 [ ] Link Budget
 [ ] GUI
 [ ] Final Report
-```
+
 
 ## Contribution
 
