@@ -321,7 +321,7 @@ If you use this project in academic work:
   title = {OFDM-PAPR-LinkSim},
   year = {2026},
   description = {Modular End-to-End OFDM Communication Link Simulator with PAPR Reduction Techniques},
-  url = {https://github.com/yourusername/ofdm-papr-linksim}
+  url = {https://github.com/M-Amin-Wolverine/ofdm-papr-linksim}
 }
 ```
 
@@ -351,42 +351,3 @@ Research Interests:
 
 *"Engineering communication systems by combining theory, simulation, and practical analysis."*
 
-```
-
-For GitHub, I would also recommend:
-
-- **Repository Name:** `ofdm-papr-linksim`
-- **Visibility:** Public
-- **License:** MIT
-- **Topics/Tags:**
-```
-
-ofdm
-papr
-wireless-communications
-digital-communications
-signal-processing
-python
-lte
-5g
-ber
-qam
-research
-simulation
-
-```
-- Additional files:
-```
-
-LICENSE
-.gitignore
-requirements.txt
-docs/
-references/
-examples/
-CITATION.cff
-CONTRIBUTING.md
-CHANGELOG.md
-
-```
-```
