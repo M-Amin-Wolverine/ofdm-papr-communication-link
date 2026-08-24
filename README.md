@@ -337,10 +337,10 @@ This project is released under the MIT License.
 
 ### Current development stages:
 
-[*] Literature Review
-[*] Standard Selection
-[*] Parameter Definition
-[*] Project Skeleton
+- [*] Literature Review
+- [*] Standard Selection
+- [*] Parameter Definition
+- [*] Project Skeleton
 [ ] Source Module
 [ ] CRC
 [ ] Channel Coding
