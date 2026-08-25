@@ -104,15 +104,7 @@ PAPR =
 
 or, in decibels,
 
-$$\[
-PAPR_{dB}
-=
-10\log_{10}
-\left(
-\frac{P_{peak}}
-{P_{average}}
-\right)
-\]$$
+$$\[PAPR_{dB}=10\log_{10}\left(\frac{P_{peak}}{P_{average}}\right)\]$$
 
 A high PAPR creates a significant challenge for the RF Power Amplifier.
 
