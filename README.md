@@ -5,9 +5,45 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)]()
 [![Research](https://img.shields.io/badge/Research-OFDM%20%7C%20PAPR-orange.svg)]()
 [![Status](https://img.shields.io/badge/Status-Active%20Development-success.svg)]()
+[![Simulation](https://img.shields.io/badge/Simulation-Communication%20Systems-blue.svg)]()
 
 ---
+## Table of Contents
 
+- [Overview](#overview)
+- [Research Motivation](#research-motivation)
+- [Project Objectives](#project-objectives)
+- [System Architecture](#system-architecture)
+- [End-to-End Communication Chain](#end-to-end-communication-chain)
+- [OFDM Processing](#ofdm-processing)
+- [PAPR Problem](#papr-problem)
+- [PAPR Reduction Techniques](#papr-reduction-techniques)
+- [Channel Models](#channel-models)
+- [Synchronization and Impairments](#synchronization-and-impairments)
+- [Equalization](#equalization)
+- [Channel Coding](#channel-coding)
+- [Performance Metrics](#performance-metrics)
+- [Simulation Scenarios](#simulation-scenarios)
+- [Parameter Analysis](#parameter-analysis)
+- [Power Amplifier Analysis](#power-amplifier-analysis)
+- [Link Budget and Coverage Extension](#link-budget-and-coverage-extension)
+- [Real-World Application Scenarios](#real-world-application-scenarios)
+- [Project Structure](#project-structure)
+- [Software Architecture](#software-architecture)
+- [Installation](#installation)
+- [Requirements](#requirements)
+- [Running the Simulator](#running-the-simulator)
+- [Example Configuration](#example-configuration)
+- [Output and Results](#output-and-results)
+- [Reproducibility](#reproducibility)
+- [Research Methodology](#research-methodology)
+- [Validation Strategy](#validation-strategy)
+- [References](#references)
+- [Future Work](#future-work)
+- [Citation](#citation)
+- [License](#license)
+- [Author](#author)
+---
 ## Overview
 
 **OFDM-PAPR-LinkSim** is a modular and research-oriented simulation framework for designing, evaluating, and analyzing a complete digital communication link based on **Orthogonal Frequency Division Multiplexing (OFDM)** with a special focus on **Peak-to-Average Power Ratio (PAPR) reduction techniques**.
@@ -15,6 +51,31 @@
 The project is developed as an advanced academic and engineering platform for investigating the impact of waveform design, channel impairments, coding schemes, equalization methods, and PAPR reduction algorithms on system performance.
 
 Unlike simplified OFDM demonstrations, this framework implements an **end-to-end communication chain**, starting from real data sources and ending with recovered information and comprehensive performance evaluation.
+
+The complete system can process real input data such as:
+
+- Text
+- Images
+- Audio
+- Video
+- MPEG-TS
+- Arbitrary binary files
+
+The data is converted into a binary stream, protected using error-detection and channel-coding techniques, mapped onto modulation symbols, transmitted using OFDM, passed through configurable channel models, equalized and demodulated at the receiver, decoded, and reconstructed into the original data format.
+
+The framework additionally provides quantitative and visual analysis of:
+
+- BER
+- PAPR
+- PAPR CCDF
+- EVM
+- Throughput
+- Spectral efficiency
+- PSD
+- Constellation diagrams
+- Time-domain OFDM waveforms
+- Computational complexity
+- Power-amplifier effects
 
 ---
 
