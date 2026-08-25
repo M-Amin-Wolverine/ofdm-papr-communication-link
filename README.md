@@ -92,7 +92,16 @@ Performance Analysis
 ````
 
 ---
+## Project Philosophy
 
+- Build the complete communication link first.
+- Validate the baseline.
+- Introduce PAPR reduction.
+- Measure the trade-offs.
+- Add realistic impairments.
+- Connect the results to real RF engineering.
+
+---
 ## Implemented Modules
 
 ### Core Communication Blocks
@@ -185,10 +194,22 @@ Future:
 | Scenario | Modulation | Channel  | PAPR Method      |
 | -------- | ---------- | -------- | ---------------- |
 | S1       | QPSK       | AWGN     | None             |
-| S2       | QPSK       | Rayleigh | Clipping         |
+| S2       | QPSK       | Rayleigh | None             |
+| S3       | 16-QAM     | AWGN     | SLM              |
 | S3       | 16-QAM     | Rayleigh | SLM              |
 | S4       | 16-QAM     | Rayleigh | PTS              |
 | S5       | 16-QAM     | Rician   | Tone Reservation |
+
+### The scenarios can subsequently be expanded to include:
+
+- QPSK
+- 64-QAM
+- 256-QAM
+- Different coding rates
+- Different FFT sizes
+- Different channel models
+- Different equalizers
+- Different oversampling factors
 
 ---
 
@@ -318,10 +339,11 @@ If you use this project in academic work:
 ```bibtex
 @software{ofdm_papr_linksim,
   author = {Mohammad Amin Khodadadi},
-  title = {OFDM-PAPR-LinkSim},
+  title = {OFDM-PAPR-LinkSim: End-to-End OFDM Communication Link Simulator with PAPR Reduction},
   year = {2026},
   description = {Modular End-to-End OFDM Communication Link Simulator with PAPR Reduction Techniques},
-  url = {https://github.com/M-Amin-Wolverine/ofdm-papr-linksim}
+  url = {https://github.com/M-Amin-Wolverine/ofdm-papr-linksim},
+  license      = {MIT}      
 }
 ```
 
@@ -371,6 +393,13 @@ This project is released under the MIT License.
 - [ ] GUI
 - [ ] Final Report
 
+----
+## Acknowledgment
+
+This project was developed as an academic communication-system simulation project with emphasis on OFDM waveform generation, PAPR reduction, channel modeling, and end-to-end link performance evaluation.
+
+The theoretical foundations and parameter-selection methodology are based on established literature, communication standards, and peer-reviewed research.
+----
 
 ## Contribution
 
@@ -414,6 +443,8 @@ Research Interests:
 * AI-Native 6G
 * Digital Communication Systems
 * Signal Processing
+* 5G / 6G Systems
+* Communication-System Simulation
 
 ---
 
