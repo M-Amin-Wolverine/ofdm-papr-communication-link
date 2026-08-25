@@ -88,23 +88,23 @@ High Peak-to-Average Power Ratio (PAPR) is one of the major drawbacks of OFDM sy
 
 For an OFDM signal
 
-\[
+$$\[
 x[n] = \frac{1}{N}\sum_{k=0}^{N-1}X_k e^{j2\pi kn/N}
-\]
+\]$$
 
 multiple independently modulated subcarriers can constructively combine in the time domain and produce large signal peaks.
 
 The PAPR is defined as
 
-\[
+$$\[
 PAPR =
 \frac{\max_n |x[n]|^2}
 {\mathbb{E}[|x[n]|^2]}
-\]
+\]$$
 
 or, in decibels,
 
-\[
+$$\[
 PAPR_{dB}
 =
 10\log_{10}
@@ -112,7 +112,7 @@ PAPR_{dB}
 \frac{P_{peak}}
 {P_{average}}
 \right)
-\]
+\]$$
 
 A high PAPR creates a significant challenge for the RF Power Amplifier.
 
