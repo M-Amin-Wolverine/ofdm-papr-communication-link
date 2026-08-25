@@ -389,7 +389,7 @@ $$[PAPR =\frac{\max |x[n]|^2}{\mathbb{E}[|x[n]|^2]}]$$
 
 The complementary cumulative distribution function (CCDF) is used to statistically evaluate PAPR:
 
-$$[ CCDF(PAPR\_0)Pr(PAPR>PAPR\_0)]$$
+$$[ CCDF(PAPR\_0)=Pr(PAPR>PAPR\_0)]$$
 
 The PAPR CCDF is one of the primary outputs of this project.
 
