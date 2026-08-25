@@ -80,8 +80,41 @@ The framework additionally provides quantitative and visual analysis of:
 ---
 
 ## Research Motivation
+OFDM is widely used in modern wireless and broadband communication systems because it provides high spectral efficiency and robustness against frequency-selective multipath channels.
+
+However, one of its fundamental disadvantages is its potentially high **Peak-to-Average Power Ratio**.
 
 High Peak-to-Average Power Ratio (PAPR) is one of the major drawbacks of OFDM systems. Large signal peaks force the Power Amplifier (PA) to operate with significant back-off, reducing power efficiency and degrading overall system performance.
+
+For an OFDM signal
+
+\[
+x[n] = \frac{1}{N}\sum_{k=0}^{N-1}X_k e^{j2\pi kn/N}
+\]
+
+multiple independently modulated subcarriers can constructively combine in the time domain and produce large signal peaks.
+
+The PAPR is defined as
+
+\[
+PAPR =
+\frac{\max_n |x[n]|^2}
+{\mathbb{E}[|x[n]|^2]}
+\]
+
+or, in decibels,
+
+\[
+PAPR_{dB}
+=
+10\log_{10}
+\left(
+\frac{P_{peak}}
+{P_{average}}
+\right)
+\]
+
+A high PAPR creates a significant challenge for the RF Power Amplifier.
 
 This project investigates:
 
