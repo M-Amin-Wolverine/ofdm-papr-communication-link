@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: "OFDM-PAPR-LinkSim"
+message: "If you use this software in your research, please cite it."
+type: software
+
+authors:
+  - family-names: "Khodadadi"
+    given-names: "Mohammad Amin"
+
+year: 2026
+
+license: MIT
