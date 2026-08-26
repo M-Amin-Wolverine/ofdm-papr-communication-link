@@ -2,7 +2,25 @@
 __pycache__/
 *.py[codz]
 *$py.class
+.venv/
+venv/
+.env
+.vscode/
+.idea/
 
+*.log
+
+results/*
+!results/.gitkeep
+
+*.mat
+*.wav
+*.mp4
+*.avi
+*.png
+*.jpg
+
+.DS_Store
 # C extensions
 *.so
 
