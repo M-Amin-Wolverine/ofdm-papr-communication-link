@@ -1,1 +1,915 @@
+# =============================================================================
+
+# OFDM-PAPR-LinkSim
+
+# Reference Baseline Configuration
+
+# =============================================================================
+
+#
+
+# Purpose:
+
+# Reproducible reference configuration for validating the fundamental
+
+# end-to-end OFDM communication chain and establishing the unprocessed
+
+# OFDM PAPR reference against which future PAPR-reduction algorithms
+
+# will be evaluated.
+
+#
+
+# Baseline Status:
+
+# REFERENCE / LOCKED
+
+#
+
+# Scope:
+
+# - Uncoded QPSK OFDM
+
+# - AWGN channel
+
+# - No PAPR reduction
+
+# - No synchronization impairments
+
+# - No fading
+
+# - No interleaving
+
+# - Reproducible Monte-Carlo simulation
+
+#
+
+# =============================================================================
+
+# =============================================================================
+
+# 1. Scenario Metadata
+
+# =============================================================================
+
+scenario:
+name: "reference_baseline"
+version: "1.1"
+description: >
+Reproducible uncoded QPSK OFDM reference scenario for PAPR,
+BER, EVM, and CCDF validation prior to PAPR-reduction experiments.
+
+status: "locked"
+reference: true
+
+purpose:
+- "OFDM waveform validation"
+- "PAPR distribution characterization"
+- "CCDF reference generation"
+- "BER baseline generation"
+- "EVM baseline generation"
+- "Reproducibility validation"
+
+papr_reduction: "none"
+
+# =============================================================================
+
+# 2. Reproducibility
+
+# =============================================================================
+
+random:
+seed: 42
+
+deterministic: true
+
+# All stochastic processes must derive their random states from the
+
+# centralized seed. Individual modules must NOT call np.random.seed().
+
+centralized: true
+
+streams:
+source: 1
+channel: 2
+fading: 3
+synchronization: 4
+papr: 5
+
+# =============================================================================
+
+# 3. Simulation Control
+
+# =============================================================================
+
+simulation:
+
+# Development mode:
+
+# Use a smaller number of OFDM blocks for rapid debugging.
+
+#
+
+# Research mode:
+
+# Use the full reference configuration.
+
+mode: "research"
+
+# Number of independent OFDM blocks/symbols used for PAPR statistics.
+
+#
+
+# 100,000 provides substantially better tail estimation than 10,000.
+
+ofdm_blocks: 100000
+
+# Recommended development value:
+
+development_ofdm_blocks: 10000
+
+# Monte-Carlo repetitions for independent experiments.
+
+#
+
+# PAPR CCDF statistics are primarily accumulated across OFDM blocks.
+
+# This parameter is reserved for repeated independent trials.
+
+monte_carlo_iterations: 1
+
+# Stop conditions are disabled for the locked baseline.
+
+early_stopping: false
+
+# =============================================================================
+
+# 4. OFDM System Parameters
+
+# =============================================================================
+
+ofdm:
+
+# IFFT / FFT size.
+
+fft_size: 256
+
+# Number of active subcarriers carrying either data or pilots.
+
+active_subcarriers: 200
+
+# Number of pilot subcarriers.
+
+pilot_subcarriers: 8
+
+# Derived automatically by the implementation:
+
+# data_subcarriers = active_subcarriers - pilot_subcarriers
+
+data_subcarriers: 192
+
+# Cyclic Prefix length in original-rate samples.
+
+cyclic_prefix_length: 16
+
+# Oversampling factor used for accurate discrete-time PAPR estimation.
+
+oversampling_factor: 4
+
+# Frequency-domain zero-padding is used to realize oversampling.
+
+oversampling_method: "frequency_domain_zero_padding"
+
+# FFT normalization convention.
+
+#
+
+# "unitary" means the transform preserves signal energy:
+
+# ||FFT(x)||_2 = ||x||_2
+
+fft_normalization: "unitary"
+
+# DC carrier is not used for data.
+
+dc_subcarrier: null
+
+# Guard carriers remain inactive.
+
+guard_subcarriers: true
+
+# Subcarrier allocation.
+
+mapping:
+type: "symmetric"
+include_dc: false
+
+# CP is included in transmission but excluded from PAPR calculation.
+
+papr_include_cp: false
+
+# =============================================================================
+
+# 5. Modulation
+
+# =============================================================================
+
+modulation:
+
+scheme: "QPSK"
+
+order: 4
+
+bits_per_symbol: 2
+
+# Gray-coded constellation.
+
+mapping: "gray"
+
+# Normalize average constellation energy to unity.
+
+normalize_average_power: true
+
+target_average_symbol_energy: 1.0
+
+# =============================================================================
+
+# 6. Source / Bit Generation
+
+# =============================================================================
+
+source:
+
+type: "random_bits"
+
+# Number of bits is derived from:
+
+#
+
+# data_subcarriers
+
+# × bits_per_symbol
+
+# × number_of_ofdm_blocks
+
+#
+
+# Therefore this value should not be manually hard-coded.
+
+length: "derived"
+
+binary_alphabet: [0, 1]
+
+# =============================================================================
+
+# 7. Channel Coding
+
+# =============================================================================
+
+coding:
+
+enabled: false
+
+scheme: "none"
+
+code_rate: 1.0
+
+# No redundancy is introduced in the reference baseline.
+
+crc:
+enabled: false
+
+channel_coding:
+enabled: false
+type: "none"
+
+# =============================================================================
+
+# 8. Interleaving
+
+# =============================================================================
+
+interleaving:
+
+enabled: false
+
+type: "none"
+
+# =============================================================================
+
+# 9. Channel Model
+
+# =============================================================================
+
+channel:
+
+# Phase 1 reference channel.
+
+model: "AWGN"
+
+enabled: true
+
+fading: false
+
+# AWGN is applied according to the configured SNR definition.
+
+noise:
+type: "AWGN"
+
+```
+# SNR is specified at the system level in dB.
+snr_definition: "EsN0"
+```
+
+rayleigh:
+enabled: false
+
+rician:
+enabled: false
+
+# =============================================================================
+
+# 10. SNR Configuration
+
+# =============================================================================
+
+snr:
+
+start_db: 0
+
+stop_db: 30
+
+step_db: 2
+
+values:
+- 0
+- 2
+- 4
+- 6
+- 8
+- 10
+- 12
+- 14
+- 16
+- 18
+- 20
+- 22
+- 24
+- 26
+- 28
+- 30
+
+# =============================================================================
+
+# 11. Synchronization Impairments
+
+# =============================================================================
+
+synchronization:
+
+enabled: false
+
+carrier_frequency_offset:
+enabled: false
+normalized_offset: 0.0
+
+timing_offset:
+enabled: false
+sample_offset: 0
+
+phase_offset:
+enabled: false
+radians: 0.0
+
+# =============================================================================
+
+# 12. Equalization
+
+# =============================================================================
+
+equalization:
+
+enabled: false
+
+method: "none"
+
+# Equalization is unnecessary for the AWGN-only reference channel
+
+# because there is no frequency-selective channel distortion.
+
+# =============================================================================
+
+# 13. PAPR Measurement
+
+# =============================================================================
+
+papr:
+
+enabled: true
+
+# Reference waveform:
+
+# conventional OFDM without PAPR-reduction processing.
+
+method: "none"
+
+definition: "peak_to_average_power"
+
+# PAPR = max(|x[n]|^2) / mean(|x[n]|^2)
+
+formula: "max_power_div_mean_power"
+
+domain:
+time_domain: true
+useful_samples_only: true
+include_cyclic_prefix: false
+
+normalization:
+average_power_normalization: false
+preserve_waveform_power: true
+
+output_unit: "dB"
+
+# PAPR_dB = 10 * log10(PAPR_linear)
+
+logarithmic_scale: true
+
+# =============================================================================
+
+# 14. PAPR CCDF
+
+# =============================================================================
+
+ccdf:
+
+enabled: true
+
+definition: "P(PAPR > threshold)"
+
+threshold_domain: "linear"
+
+output_domain: "dB"
+
+# Probability levels at which PAPR thresholds are reported.
+
+report_probabilities:
+- 1.0e-1
+- 1.0e-2
+- 1.0e-3
+- 1.0e-4
+
+# Dense threshold grid for plotting the complete CCDF curve.
+
+threshold:
+min_db: 0.0
+max_db: 15.0
+step_db: 0.1
+
+# Empirical CCDF:
+
+#
+
+# CCDF(gamma) = number(PAPR > gamma) / number_of_blocks
+
+#
+
+method: "empirical"
+
+include_analytical_reference: true
+
+analytical_reference:
+enabled: true
+model: "independent_samples_approximation"
+
+```
+# Used ONLY as a theoretical sanity check.
+#
+# This is not used to generate empirical results.
+oversampling_correction_factor: 2.8
+```
+
+# =============================================================================
+
+# 15. BER Evaluation
+
+# =============================================================================
+
+ber:
+
+enabled: true
+
+definition: "bit_error_rate"
+
+formula: "bit_errors / transmitted_bits"
+
+comparison_domain: "information_bits"
+
+exclude:
+- "pilot_bits"
+
+report_per_snr: true
+
+confidence_interval:
+enabled: false
+
+zero_error_policy:
+minimum_reported_ber: 1.0e-12
+
+# =============================================================================
+
+# 16. EVM Evaluation
+
+# =============================================================================
+
+evm:
+
+enabled: true
+
+reference: "ideal_constellation"
+
+metrics:
+
+```
+rms:
+  enabled: true
+  unit: "percent"
+
+peak:
+  enabled: true
+  unit: "percent"
+```
+
+normalization:
+reference_power: "ideal_symbol_power"
+
+# =============================================================================
+
+# 17. PSD Evaluation
+
+# =============================================================================
+
+psd:
+
+enabled: true
+
+method: "welch"
+
+window: "hann"
+
+nperseg: 1024
+
+noverlap: 512
+
+scaling: "density"
+
+unit: "dB_per_Hz"
+
+# =============================================================================
+
+# 18. Constellation Analysis
+
+# =============================================================================
+
+constellation:
+
+enabled: true
+
+modulation: "QPSK"
+
+plot: true
+
+reference_constellation: true
+
+# =============================================================================
+
+# 19. Waveform Analysis
+
+# =============================================================================
+
+waveform:
+
+enabled: true
+
+save_time_domain_samples: true
+
+# Number of samples saved for diagnostic plots.
+
+diagnostic_samples: 4096
+
+save_complex_samples: false
+
+# =============================================================================
+
+# 20. Result Generation
+
+# =============================================================================
+
+results:
+
+root_directory: "results/baseline"
+
+overwrite: false
+
+save_raw_data: true
+
+save_processed_data: true
+
+save_configuration: true
+
+save_metadata: true
+
+save_summary: true
+
+formats:
+csv: true
+json: true
+numpy: true
+
+directories:
+
+```
+papr: "results/baseline/papr"
+
+ber: "results/baseline/ber"
+
+evm: "results/baseline/evm"
+
+psd: "results/baseline/psd"
+
+figures: "results/baseline/figures"
+
+metadata: "results/baseline/metadata"
+```
+
+# =============================================================================
+
+# 21. Visualization
+
+# =============================================================================
+
+visualization:
+
+enabled: true
+
+style: "scientific"
+
+figures:
+
+```
+papr_ccdf: true
+
+ber_vs_snr: true
+
+evm_vs_snr: true
+
+constellation: true
+
+psd: true
+
+waveform: true
+```
+
+save_format: "png"
+
+dpi: 300
+
+transparent: false
+
+show_interactive: false
+
+# =============================================================================
+
+# 22. Validation
+
+# =============================================================================
+
+validation:
+
+enabled: true
+
+strict: true
+
+checks:
+
+```
+fft_size:
+  enabled: true
+
+active_subcarriers:
+  enabled: true
+
+pilot_configuration:
+  enabled: true
+
+cyclic_prefix:
+  enabled: true
+
+oversampling:
+  enabled: true
+
+modulation:
+  enabled: true
+
+coding:
+  enabled: true
+
+interleaving:
+  enabled: true
+
+random_seed:
+  enabled: true
+
+papr_definition:
+  enabled: true
+
+ccdf:
+  enabled: true
+```
+
+# =============================================================================
+
+# 23. Reference Scenario Constraints
+
+# =============================================================================
+
+#
+
+# These constraints prevent accidental modification of the scientific
+
+# reference configuration during baseline validation.
+
+#
+
+reference_constraints:
+
+require_uncoded: true
+
+require_no_interleaving: true
+
+require_awgn: true
+
+require_no_fading: true
+
+require_no_synchronization_impairments: true
+
+require_no_papr_reduction: true
+
+require_fixed_seed: true
+
+require_oversampling: true
+
+require_cp_excluded_from_papr: true
+
+require_reproducible_results: true
+
+# =============================================================================
+
+# 24. Expected Reference Pipeline
+
+# =============================================================================
+
+#
+
+# Transmitter:
+
+#
+
+# Random Bits
+
+# ↓
+
+# QPSK Mapping
+
+# ↓
+
+# Subcarrier Mapping
+
+# ↓
+
+# Frequency-Domain Zero Padding
+
+# ↓
+
+# IFFT
+
+# ↓
+
+# Time-Domain OFDM Waveform
+
+# ↓
+
+# Cyclic Prefix
+
+#
+
+# PAPR Analysis:
+
+#
+
+# Useful OFDM Samples
+
+# ↓
+
+# PAPR Measurement
+
+# ↓
+
+# Empirical CCDF
+
+#
+
+# Communication Link:
+
+#
+
+# OFDM Waveform
+
+# ↓
+
+# AWGN
+
+# ↓
+
+# CP Removal
+
+# ↓
+
+# FFT
+
+# ↓
+
+# Subcarrier Extraction
+
+# ↓
+
+# QPSK Demodulation
+
+# ↓
+
+# BER / EVM
+
+#
+
+# =============================================================================
+
+# =============================================================================
+
+# 25. Reference Baseline Summary
+
+# =============================================================================
+
+reference_summary:
+
+fft_size: 256
+
+active_subcarriers: 200
+
+pilot_subcarriers: 8
+
+data_subcarriers: 192
+
+cyclic_prefix_length: 16
+
+modulation: "QPSK"
+
+oversampling_factor: 4
+
+channel: "AWGN"
+
+coding: "none"
+
+interleaving: false
+
+synchronization_impairments: false
+
+papr_reduction: "none"
+
+snr_range_db: "0:2:30"
+
+ofdm_blocks: 100000
+
+monte_carlo_iterations: 1
+
+random_seed: 42
+
+papr_cp_included: false
+
+ccdf_points:
+- 1.0e-1
+- 1.0e-2
+- 1.0e-3
+- 1.0e-4
+
+primary_metrics:
+- "PAPR"
+- "PAPR CCDF"
+- "BER"
+- "RMS EVM"
+- "Peak EVM"
+
+# =============================================================================
+
+# End of Reference Baseline Configuration
+
+# =============================================================================
 
