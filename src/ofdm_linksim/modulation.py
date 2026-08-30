@@ -1,4 +1,3 @@
-```python
 """
 OFDM-LinkSim — Digital Modulation / Demodulation
 =================================================
@@ -622,4 +621,3 @@ def demodulate(
     validate_bits(bits)
 
     return bits
-```
