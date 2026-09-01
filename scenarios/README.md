@@ -73,6 +73,16 @@ python scripts/run_experiment.py --scenario scenarios/papr/clipping.yaml
 # PAPR sweep CLI (methods/CR grid; does not require every YAML field)
 python scripts/run_papr_sweep.py --methods none,clipping --clip-ratios 1.2,1.5,1.8
 ```
+OR
+```
+
+python scripts/run_baseline.py
+python scripts/run_experiment.py --scenario scenarios/baseline.yaml
+python scripts/run_experiment.py --scenario scenarios/papr/clipping.yaml
+python scripts/run_experiment.py --scenario scenarios/profiles/ieee80211a.yaml
+python scripts/run_papr_sweep.py --methods none,clipping
+```
+SLM / PTS / TR scenarios will raise NotImplementedError until Phase-2 algorithms are implemented under papr_methods/.
 
 ---
 
