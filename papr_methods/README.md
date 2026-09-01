@@ -140,14 +140,11 @@ print(result.papr.papr_db, result.meta["modified"])  # modified == False
 
 | Mode   | Rule |
 |--------|------|
-| `hard` | If \(\lvert x\rvert > A\), set \(x \leftarrow A\,e^{j\arg(x)}\) |
-| `soft` | \(A\tanh(\lvert x\rvert/A)\,e^{j\arg(x)}\) |
+| `hard` | If $$\(\lvert x\rvert > A\)$$, set $$\(x \leftarrow A\,e^{j\arg(x)}\)$$ |
+| `soft` | $$\(A\tanh(\lvert x\rvert/A)\,e^{j\arg(x)}\)$$ |
 
 **Clipping ratio:**
-
-\[
-CR = \frac{A}{\sqrt{\mathbb{E}[\lvert x\rvert^2]}}
-\]
+$$\[CR = \frac{A}{\sqrt{\mathbb{E}[\lvert x\rvert^2]}}\]$$
 
 RMS is computed on **useful** samples. Typical research values: \(CR \in [1.2, 2.0]\).
 
@@ -155,7 +152,7 @@ RMS is computed on **useful** samples. Typical research values: \(CR \in [1.2, 2
 
 | Parameter         | Default | Meaning                                      |
 |-------------------|---------|----------------------------------------------|
-| `clipping_ratio`  | `1.5`   | \(CR = A / \mathrm{rms}\)                    |
+| `clipping_ratio`  | `1.5`   | $$\(CR = A / \mathrm{rms}\)$$                |
 | `mode`            | `hard`  | `hard` or `soft`                             |
 | `clip_cp`         | `True`  | Clip full waveform including CP              |
 
