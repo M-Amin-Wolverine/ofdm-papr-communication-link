@@ -1,1 +1,47 @@
+# =============================================================================
+# PAPR scenario: Selected Mapping (SLM) — Phase-2
+# =============================================================================
+# Algorithm module is a stub in Stage-1 (NotImplementedError).
+# This YAML reserves the experiment layout for Phase-2.
+# =============================================================================
 
+scenario:
+  name: "papr_slm"
+  version: "0.1"
+  status: "stub"
+  reference: false
+  description: >
+    Selected Mapping (SLM) PAPR reduction. Not executable until
+    papr_methods.slm is implemented (Phase-2).
+  papr_reduction: "slm"
+
+extends: "configs/baseline.yaml"
+
+papr:
+  method: "slm"
+  include_cp: false
+  analysis_enabled: true
+  slm:
+    n_candidates: 8
+    phase_set_rad: [0.0, 1.5707963267948966, 3.141592653589793, 4.71238898038469]
+
+channel:
+  model: "AWGN"
+  enabled: true
+  fading: false
+
+simulation:
+  mode: "development"
+  ofdm_blocks: 10000
+
+random:
+  seed: 42
+  deterministic: true
+  centralized: true
+
+results:
+  root_directory: "results/experiments/papr/slm"
+
+reference_constraints:
+  require_no_papr_reduction: false
+  require_cp_excluded_from_papr: true
