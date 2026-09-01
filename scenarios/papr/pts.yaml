@@ -1,1 +1,45 @@
 
+# =============================================================================
+# PAPR scenario: Partial Transmit Sequence (PTS) — Phase-2
+# =============================================================================
+
+scenario:
+  name: "papr_pts"
+  version: "0.1"
+  status: "stub"
+  reference: false
+  description: >
+    Partial Transmit Sequence (PTS). Stage-1 module is a stub.
+  papr_reduction: "pts"
+
+extends: "configs/baseline.yaml"
+
+papr:
+  method: "pts"
+  include_cp: false
+  analysis_enabled: true
+  pts:
+    n_subblocks: 4
+    n_candidates: 8
+    phase_set_rad: [0.0, 3.141592653589793]
+
+channel:
+  model: "AWGN"
+  enabled: true
+  fading: false
+
+simulation:
+  mode: "development"
+  ofdm_blocks: 10000
+
+random:
+  seed: 42
+  deterministic: true
+  centralized: true
+
+results:
+  root_directory: "results/experiments/papr/pts"
+
+reference_constraints:
+  require_no_papr_reduction: false
+  require_cp_excluded_from_papr: true
