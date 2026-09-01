@@ -14,11 +14,8 @@ scenarios/
 │   ├── tone_reservation.yaml
 │   └── ace.yaml
 ├── profiles/                  # Runtime profiles (block count, sweeps, …)
-│   ├── development.yaml
-│   ├── research.yaml
-│   ├── quick_smoke.yaml
-│   ├── ber_sweep.yaml
-│   └── rayleigh_preview.yaml
+│   ├── nr_like.yaml
+│   └── ieee80211a.yaml
 └── README.md
 ```
 
