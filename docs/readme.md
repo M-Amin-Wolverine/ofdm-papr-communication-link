@@ -70,7 +70,4 @@ All other references (survey papers, classic clipping/TR papers, etc.) support t
 
 ## License
 
-Same as the main project (see repository `LICENSE`).
-
-**داکیومنت کامل شد!**  
-حالا بگو **NEXT** تا بریم سراغ پوشه **`experiments`**.
+Same as the main project (see repository `LICENSE`)
