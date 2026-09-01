@@ -39,7 +39,7 @@ CR = \frac{A}{\mathrm{rms}}, \quad
 \mathrm{rms} = \sqrt{\mathbb{E}[|x|^2]}
 \]$$
 
-(computed on useful samples). Typical research grid: \(CR \in [1.2, 2.0]\).
+(computed on useful samples). Typical research grid:$$\(CR \in [1.2, 2.0]\)$$.
 
 Trade-off: lower PAPR, higher in-band distortion (EVM/BER degradation).
 
