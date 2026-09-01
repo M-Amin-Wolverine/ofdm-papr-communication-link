@@ -18,7 +18,7 @@ $$\[
 \mathrm{CCDF}(\gamma) = \Pr(\mathrm{PAPR}_{\mathrm{dB}} > \gamma)
 \]$$
 
-Standard report probabilities: \(10^{-1}, 10^{-2}, 10^{-3}, 10^{-4}\).
+Standard report probabilities: $$\(10^{-1}, 10^{-2}, 10^{-3}, 10^{-4}\)$$.
 
 ## Stage-1 methods
 
