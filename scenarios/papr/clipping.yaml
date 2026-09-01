@@ -1,1 +1,60 @@
+# =============================================================================
+# PAPR scenario: hard clipping
+# =============================================================================
 
+scenario:
+  name: "papr_clipping"
+  version: "1.0"
+  status: "active"
+  reference: false
+  description: >
+    Hard amplitude clipping of the OFDM time-domain waveform.
+    Compare PAPR and link metrics against method none.
+  papr_reduction: "clipping"
+
+extends: "configs/baseline.yaml"
+
+papr:
+  method: "clipping"
+  include_cp: false
+  analysis_enabled: true
+  clipping:
+    ratio: 1.5
+    mode: "hard"
+    clip_cp: true
+
+channel:
+  model: "AWGN"
+  enabled: true
+  fading: false
+
+coding:
+  enabled: false
+  scheme: "none"
+
+interleaving:
+  enabled: false
+  type: "none"
+
+simulation:
+  mode: "research"
+  ofdm_blocks: 50000
+  development_ofdm_blocks: 5000
+
+random:
+  seed: 42
+  deterministic: true
+  centralized: true
+
+results:
+  root_directory: "results/experiments/papr/clipping"
+  overwrite: false
+  save_configuration: true
+  save_summary: true
+  save_raw_data: true
+
+reference_constraints:
+  require_uncoded: true
+  require_awgn: true
+  require_no_papr_reduction: false
+  require_cp_excluded_from_papr: true
