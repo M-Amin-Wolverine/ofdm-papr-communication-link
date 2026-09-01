@@ -1,1 +1,44 @@
+# =============================================================================
+# PAPR scenario: Tone Reservation (TR) — Phase-2
+# =============================================================================
 
+scenario:
+  name: "papr_tone_reservation"
+  version: "0.1"
+  status: "stub"
+  reference: false
+  description: >
+    Tone Reservation PAPR reduction. Stage-1 module is a stub.
+  papr_reduction: "tone_reservation"
+
+extends: "configs/baseline.yaml"
+
+papr:
+  method: "tone_reservation"
+  include_cp: false
+  analysis_enabled: true
+  tone_reservation:
+    n_reserved_tones: 8
+    n_iterations: 20
+    target_papr_db: null
+
+channel:
+  model: "AWGN"
+  enabled: true
+  fading: false
+
+simulation:
+  mode: "development"
+  ofdm_blocks: 10000
+
+random:
+  seed: 42
+  deterministic: true
+  centralized: true
+
+results:
+  root_directory: "results/experiments/papr/tone_reservation"
+
+reference_constraints:
+  require_no_papr_reduction: false
+  require_cp_excluded_from_papr: true
