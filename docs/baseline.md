@@ -53,7 +53,7 @@ When `scenario.reference: true` (or `load_baseline()` with enforcement):
 ## Primary metrics
 
 - PAPR (linear and dB) on useful samples
-- Empirical PAPR CCDF at \(10^{-1}, 10^{-2}, 10^{-3}, 10^{-4}\)
+- Empirical PAPR CCDF at $$\(10^{-1}, 10^{-2}, 10^{-3}, 10^{-4}\)$$
 - BER
 - RMS EVM (and peak EVM when reported)
 - Optional PSD for spectral checks
