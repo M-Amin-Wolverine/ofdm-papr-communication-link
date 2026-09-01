@@ -1,1 +1,137 @@
+# =============================================================================
+# Scenario: locked Stage-1 reference baseline
+# =============================================================================
+# Canonical full defaults live in configs/baseline.yaml.
+# This file is the scenario entry point used by scripts/run_experiment.py
+# and should stay aligned with the locked scientific reference.
+# =============================================================================
 
+scenario:
+  name: "reference_baseline"
+  version: "1.1"
+  description: >
+    Reproducible uncoded QPSK OFDM reference scenario for PAPR, BER, EVM,
+    and CCDF validation prior to PAPR-reduction experiments.
+  status: "locked"
+  reference: true
+  purpose:
+    - "OFDM waveform validation"
+    - "PAPR distribution characterization"
+    - "CCDF reference generation"
+    - "BER baseline generation"
+    - "EVM baseline generation"
+  papr_reduction: "none"
+
+# Inherit / mirror the locked research configuration
+extends: "configs/baseline.yaml"
+
+random:
+  seed: 42
+  deterministic: true
+  centralized: true
+  streams:
+    source: 1
+    channel: 2
+    fading: 3
+    synchronization: 4
+    papr: 5
+
+simulation:
+  mode: "research"
+  ofdm_blocks: 100000
+  development_ofdm_blocks: 10000
+  monte_carlo_iterations: 1
+  early_stopping: false
+
+ofdm:
+  fft_size: 256
+  active_subcarriers: 200
+  pilot_subcarriers: 8
+  data_subcarriers: 192
+  cyclic_prefix_length: 16
+  oversampling_factor: 4
+  oversampling_method: "frequency_domain_zero_padding"
+  fft_normalization: "unitary"
+  mapping:
+    type: "symmetric"
+    include_dc: false
+  papr_include_cp: false
+
+modulation:
+  scheme: "QPSK"
+  order: 4
+  bits_per_symbol: 2
+  mapping: "gray"
+  normalize_average_power: true
+  target_average_symbol_energy: 1.0
+
+source:
+  type: "random_bits"
+  length: "derived"
+
+coding:
+  enabled: false
+  scheme: "none"
+  code_rate: 1.0
+  crc:
+    enabled: false
+
+interleaving:
+  enabled: false
+  type: "none"
+
+channel:
+  model: "AWGN"
+  enabled: true
+  fading: false
+  noise:
+    type: "AWGN"
+    snr_definition: "EsN0"
+  rayleigh:
+    enabled: false
+  rician:
+    enabled: false
+
+snr:
+  start_db: 0
+  stop_db: 30
+  step_db: 2
+  values: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
+
+synchronization:
+  enabled: false
+
+equalization:
+  enabled: false
+  method: "none"
+
+papr:
+  method: "none"
+  include_cp: false
+  analysis_enabled: true
+  ccdf_probabilities: [1.0e-1, 1.0e-2, 1.0e-3, 1.0e-4]
+
+results:
+  root_directory: "results/baseline"
+  overwrite: false
+  save_raw_data: true
+  save_processed_data: true
+  save_configuration: true
+  save_metadata: true
+  save_summary: true
+  formats:
+    csv: true
+    json: true
+    numpy: true
+
+reference_constraints:
+  require_uncoded: true
+  require_no_interleaving: true
+  require_awgn: true
+  require_no_fading: true
+  require_no_synchronization_impairments: true
+  require_no_papr_reduction: true
+  require_fixed_seed: true
+  require_oversampling: true
+  require_cp_excluded_from_papr: true
+  require_reproducible_results: true
