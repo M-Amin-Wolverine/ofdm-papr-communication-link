@@ -190,6 +190,14 @@ python scripts/run_papr_sweep.py \
   --blocks 10000 \
   --output results/experiments/papr_sweep
 ```
+OR
+
+```bash
+python scripts/run_papr_sweep.py --blocks 100 --methods none,clipping
+python scripts/run_papr_sweep.py --clip-ratios 1.3,1.5 --save-raw
+python scripts/validate_results.py results/experiments/papr_sweep --recursive
+python scripts/validate_results.py results/baseline --recursive --strict
+```
 
 ### When to implement
 
