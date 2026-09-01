@@ -274,7 +274,3 @@ When implementing SLM / PTS / TR / ACE (or a custom algorithm):
 ## License
 
 Same as the main project (see repository `LICENSE`).
-
----
-
-این را به‌صورت **`papr_methods/README.md`** commit کن (اگر `none.txt` داخل همان پوشه است، حذفش کن).
