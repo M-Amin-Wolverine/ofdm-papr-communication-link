@@ -1,1 +1,87 @@
+# =============================================================================
+# Profile: 5G NR-like OFDM parameters
+# =============================================================================
+# Simplified numerology inspired by 5G NR (e.g. FFT 256 / 512-class grids).
+# For comparative studies only — not a full 3GPP stack.
+# =============================================================================
 
+scenario:
+  name: "nr_like"
+  version: "1.0"
+  status: "active"
+  reference: false
+  description: >
+    OFDM profile loosely inspired by 5G NR-style FFT and CP ratios.
+    Intended for PAPR scaling studies versus the locked baseline.
+  papr_reduction: "none"
+
+extends: "configs/baseline.yaml"
+
+ofdm:
+  fft_size: 512
+  active_subcarriers: 300
+  pilot_subcarriers: 12
+  data_subcarriers: 288
+  cyclic_prefix_length: 36
+  oversampling_factor: 4
+  oversampling_method: "frequency_domain_zero_padding"
+  fft_normalization: "unitary"
+  mapping:
+    type: "symmetric"
+    include_dc: false
+  papr_include_cp: false
+
+modulation:
+  scheme: "QPSK"
+  order: 4
+  bits_per_symbol: 2
+  mapping: "gray"
+  normalize_average_power: true
+  target_average_symbol_energy: 1.0
+
+channel:
+  model: "AWGN"
+  enabled: true
+  fading: false
+
+coding:
+  enabled: false
+  scheme: "none"
+
+interleaving:
+  enabled: false
+  type: "none"
+
+synchronization:
+  enabled: false
+
+equalization:
+  enabled: false
+  method: "none"
+
+papr:
+  method: "none"
+  include_cp: false
+  analysis_enabled: true
+
+simulation:
+  mode: "development"
+  ofdm_blocks: 10000
+  development_ofdm_blocks: 2000
+
+random:
+  seed: 42
+  deterministic: true
+  centralized: true
+
+results:
+  root_directory: "results/experiments/profiles/nr_like"
+  overwrite: false
+  save_configuration: true
+  save_summary: true
+
+reference_constraints:
+  require_uncoded: true
+  require_awgn: true
+  require_no_papr_reduction: true
+  require_cp_excluded_from_papr: true
