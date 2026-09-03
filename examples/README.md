@@ -59,6 +59,11 @@ python examples/baseline_papr.py --compare-clip --clip 1.4 --blocks 200
 python examples/baseline_ber.py
 python examples/baseline_ber.py --snr 10 --blocks 50
 python examples/baseline_ber.py --sweep 0 20 4 --blocks 30
+
+pip install pyav       # برای MP4 (VideoFrame)
+pip install ffmpeg     # برای MP3 و TS (فایل‌های صوتی)
+python examples/real_data_link.py photo.jpg --method slm --n_blocks 128
+python examples/real_data_link.py audio_opulent_voice.opus --method ace --snr_db 15 --n_blocks 64
 ```
 
 ---
