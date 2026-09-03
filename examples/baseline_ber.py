@@ -109,7 +109,7 @@ def run_one_snr(
     n_mod_symbols = n_data * n_blocks
     n_bits = n_mod_symbols * bps
 
-    source_bits = generate_random_bits(n_bits, rng=rng_src)
+    source_bits = generate_random_bits(n_bits, seed=seed, rng=rng_src)
     tx_symbols = modulate(source_bits, mod=MOD)
 
     tx_frame = modulate_ofdm(
