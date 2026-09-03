@@ -70,7 +70,7 @@ from typing import (
     Dict,
     Tuple,
 )
-#we use list later ......
+
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -286,13 +286,13 @@ class OFDMGrid:
             raise ValueError(
                 f"OFDMGrid.symbols must be 1-D or 2-D, got ndim={self.symbols.ndim}"
             )
-    
+
         if not np.iscomplexobj(self.symbols):
             raise TypeError("OFDMGrid.symbols must be complex-valued.")
-    
+
         if self.symbols.size == 0:
             raise ValueError("OFDMGrid.symbols cannot be empty.")
-    
+
         for name, idx in (
             ("active_indices", self.active_indices),
             ("pilot_indices", self.pilot_indices),
@@ -300,22 +300,22 @@ class OFDMGrid:
         ):
             if not isinstance(idx, np.ndarray):
                 raise TypeError(f"{name} must be a NumPy array.")
-    
+
             if idx.ndim != 1:
                 raise ValueError(f"{name} must be a 1-D array.")
-    
+
             if not np.issubdtype(idx.dtype, np.integer):
                 raise TypeError(f"{name} must contain integer indices.")
-    
+
             if len(np.unique(idx)) != len(idx):
                 raise ValueError(f"{name} must not contain duplicate indices.")
-    
+
         if len(self.active_indices) == 0:
             raise ValueError("active_indices cannot be empty.")
-    
+
         if len(self.data_indices) == 0:
             raise ValueError("data_indices cannot be empty.")
-    
+
         if np.intersect1d(
             self.pilot_indices,
             self.data_indices,
@@ -323,12 +323,12 @@ class OFDMGrid:
             raise ValueError(
                 "pilot_indices and data_indices must be disjoint."
             )
-    
+
         expected_active = np.union1d(
             self.pilot_indices,
             self.data_indices,
         )
-    
+
         if not np.array_equal(
             np.sort(self.active_indices),
             np.sort(expected_active),
@@ -337,9 +337,9 @@ class OFDMGrid:
                 "active_indices must be exactly the union of "
                 "pilot_indices and data_indices."
             )
-    
+
         fft_size = self.symbols.shape[-1]
-    
+
         for name, idx in (
             ("active_indices", self.active_indices),
             ("pilot_indices", self.pilot_indices),
@@ -431,7 +431,7 @@ class OFDMSignal:
         validate_fft_size(self.fft_size)
         validate_oversampling(self.oversampling)
         validate_positive_integer(self.n_symbols, "n_symbols")
-    
+
         # ------------------------------------------------------------------
         # Cyclic Prefix validation
         # ------------------------------------------------------------------
@@ -439,39 +439,39 @@ class OFDMSignal:
             raise TypeError(
                 "cyclic_prefix_length must be an integer."
             )
-    
+
         if self.cyclic_prefix_length < 0:
             raise ValueError(
                 "cyclic_prefix_length cannot be negative."
             )
-    
+
         if self.cyclic_prefix_length > self.fft_size:
             raise ValueError(
                 "cyclic_prefix_length cannot exceed fft_size."
             )
-    
+
         # ------------------------------------------------------------------
         # Expected OFDM waveform lengths
         # ------------------------------------------------------------------
         expected_useful_length = (
             self.fft_size * self.oversampling
         )
-    
+
         expected_total_length = (
             (self.fft_size + self.cyclic_prefix_length)
             * self.oversampling
         )
-    
+
         expected_length = (
             expected_total_length
             if self.cp_included
             else expected_useful_length
         )
-    
+
         expected_total_samples = (
             self.n_symbols * expected_length
         )
-    
+
         # ------------------------------------------------------------------
         # Waveform shape validation
         #
@@ -484,7 +484,7 @@ class OFDMSignal:
         #       [n_symbols, samples_per_symbol]
         # ------------------------------------------------------------------
         if self.samples.ndim == 1:
-    
+
             if self.samples.size != expected_total_samples:
                 raise ValueError(
                     "OFDMSignal.samples has an invalid length. "
@@ -497,14 +497,14 @@ class OFDMSignal:
                     f"cyclic_prefix_length={self.cyclic_prefix_length}, "
                     f"cp_included={self.cp_included}."
                 )
-    
+
         elif self.samples.ndim == 2:
-    
+
             expected_shape = (
                 self.n_symbols,
                 expected_length,
             )
-    
+
             if self.samples.shape != expected_shape:
                 raise ValueError(
                     "OFDMSignal.samples has an invalid shape. "
@@ -515,9 +515,9 @@ class OFDMSignal:
                     f"cyclic_prefix_length={self.cyclic_prefix_length}, "
                     f"cp_included={self.cp_included}."
                 )
-    
+
         else:
-    
+
             raise ValueError(
                 "OFDMSignal.samples must be either 1-D or 2-D."
             )
@@ -636,22 +636,22 @@ class TransmitFrame:
         validate_bits(self.source_bits)
         validate_bits(self.coded_bits)
         validate_bits(self.interleaved_bits)
-    
+
         if not np.iscomplexobj(self.modulation_symbols):
             raise TypeError(
                 "modulation_symbols must be complex-valued."
             )
-    
+
         if self.modulation_symbols.size == 0:
             raise ValueError(
                 "modulation_symbols cannot be empty."
             )
-    
+
         expected_symbols = (
             self.ofdm_grid.n_symbols *
             self.ofdm_grid.n_data
         )
-    
+
         if self.modulation_symbols.size != expected_symbols:
             raise ValueError(
                 "Number of modulation symbols does not match "
@@ -736,19 +736,19 @@ class ChannelOutput:
 
     def __post_init__(self) -> None:
         validate_complex_signal(self.signal)
-    
+
         if not isinstance(self.channel_type, ChannelType):
             raise TypeError(
                 "channel_type must be an instance of ChannelType."
             )
-    
+
         validate_non_negative(
             self.noise_power,
             "noise_power",
         )
-    
+
         validate_snr_db(self.snr_db)
-    
+
         if self.channel_gain is not None:
             validate_complex_signal(self.channel_gain)
 
@@ -791,101 +791,101 @@ class PAPRResult:
     cp_excluded: bool = True
     n_samples_used: int = 0
 
-   def __post_init__(self) -> None:
-    # -----------------------------------------------------------------
-    # PAPR linear
-    # -----------------------------------------------------------------
-    if not np.isfinite(self.papr_linear):
-        raise ValueError(
-            "papr_linear must be finite."
-        )
+    def __post_init__(self) -> None:
+        # -----------------------------------------------------------------
+        # PAPR linear
+        # -----------------------------------------------------------------
+        if not np.isfinite(self.papr_linear):
+            raise ValueError(
+                "papr_linear must be finite."
+            )
 
-    if self.papr_linear < 1.0:
-        raise ValueError(
-            "papr_linear must be >= 1."
-        )
+        if self.papr_linear < 1.0:
+            raise ValueError(
+                "papr_linear must be >= 1."
+            )
 
-    # -----------------------------------------------------------------
-    # PAPR dB consistency
-    # -----------------------------------------------------------------
-    if not np.isfinite(self.papr_db):
-        raise ValueError(
-            "papr_db must be finite."
-        )
+        # -----------------------------------------------------------------
+        # PAPR dB consistency
+        # -----------------------------------------------------------------
+        if not np.isfinite(self.papr_db):
+            raise ValueError(
+                "papr_db must be finite."
+            )
 
-    expected_db = 10.0 * np.log10(self.papr_linear)
+        expected_db = 10.0 * np.log10(self.papr_linear)
 
-    if not np.isclose(
-        self.papr_db,
-        expected_db,
-        rtol=1e-6,
-        atol=1e-9,
-    ):
-        raise ValueError(
-            "papr_db is inconsistent with papr_linear."
-        )
+        if not np.isclose(
+            self.papr_db,
+            expected_db,
+            rtol=1e-6,
+            atol=1e-9,
+        ):
+            raise ValueError(
+                "papr_db is inconsistent with papr_linear."
+            )
 
-    # -----------------------------------------------------------------
-    # Power values
-    # -----------------------------------------------------------------
-    if not np.isfinite(self.peak_power):
-        raise ValueError(
-            "peak_power must be finite."
-        )
+        # -----------------------------------------------------------------
+        # Power values
+        # -----------------------------------------------------------------
+        if not np.isfinite(self.peak_power):
+            raise ValueError(
+                "peak_power must be finite."
+            )
 
-    if not np.isfinite(self.average_power):
-        raise ValueError(
-            "average_power must be finite."
-        )
+        if not np.isfinite(self.average_power):
+            raise ValueError(
+                "average_power must be finite."
+            )
 
-    if self.peak_power <= 0.0:
-        raise ValueError(
-            "peak_power must be strictly positive."
-        )
+        if self.peak_power <= 0.0:
+            raise ValueError(
+                "peak_power must be strictly positive."
+            )
 
-    if self.average_power <= 0.0:
-        raise ValueError(
-            "average_power must be strictly positive."
-        )
+        if self.average_power <= 0.0:
+            raise ValueError(
+                "average_power must be strictly positive."
+            )
 
-    if self.peak_power < self.average_power:
-        raise ValueError(
-            "peak_power cannot be smaller than average_power."
-        )
+        if self.peak_power < self.average_power:
+            raise ValueError(
+                "peak_power cannot be smaller than average_power."
+            )
 
-    # -----------------------------------------------------------------
-    # Sample metadata
-    # -----------------------------------------------------------------
-    if not isinstance(
-        self.n_samples_used,
-        (int, np.integer),
-    ):
-        raise TypeError(
-            "n_samples_used must be an integer."
-        )
+        # -----------------------------------------------------------------
+        # Sample metadata
+        # -----------------------------------------------------------------
+        if not isinstance(
+            self.n_samples_used,
+            (int, np.integer),
+        ):
+            raise TypeError(
+                "n_samples_used must be an integer."
+            )
 
-    if self.n_samples_used <= 0:
-        raise ValueError(
-            "n_samples_used must be positive."
-        )
+        if self.n_samples_used <= 0:
+            raise ValueError(
+                "n_samples_used must be positive."
+            )
 
-    if not isinstance(
-        self.peak_index,
-        (int, np.integer),
-    ):
-        raise TypeError(
-            "peak_index must be an integer."
-        )
+        if not isinstance(
+            self.peak_index,
+            (int, np.integer),
+        ):
+            raise TypeError(
+                "peak_index must be an integer."
+            )
 
-    if self.peak_index < 0:
-        raise ValueError(
-            "peak_index cannot be negative."
-        )
+        if self.peak_index < 0:
+            raise ValueError(
+                "peak_index cannot be negative."
+            )
 
-    if self.peak_index >= self.n_samples_used:
-        raise ValueError(
-            "peak_index must be smaller than n_samples_used."
-        )
+        if self.peak_index >= self.n_samples_used:
+            raise ValueError(
+                "peak_index must be smaller than n_samples_used."
+            )
 
 @dataclass(frozen=True, slots=True)
 class CCDFResult:
@@ -906,53 +906,53 @@ class CCDFResult:
     def __post_init__(self) -> None:
         thresholds = np.asarray(self.thresholds_db)
         probabilities = np.asarray(self.probabilities)
-    
+
         if thresholds.ndim != 1:
             raise ValueError(
                 "thresholds_db must be a 1-D array."
             )
-    
+
         if probabilities.ndim != 1:
             raise ValueError(
                 "probabilities must be a 1-D array."
             )
-    
+
         if len(thresholds) != len(probabilities):
             raise ValueError(
                 "thresholds_db and probabilities must have "
                 "identical length."
             )
-    
+
         if len(thresholds) == 0:
             raise ValueError(
                 "CCDF cannot be empty."
             )
-    
+
         if not np.all(np.isfinite(thresholds)):
             raise ValueError(
                 "thresholds_db must contain only finite values."
             )
-    
+
         if not np.all(np.isfinite(probabilities)):
             raise ValueError(
                 "probabilities must contain only finite values."
             )
-    
+
         if np.any(probabilities < 0.0) or np.any(probabilities > 1.0):
             raise ValueError(
                 "All probabilities must lie in [0, 1]."
             )
-    
+
         if np.any(np.diff(thresholds) < 0):
             raise ValueError(
                 "thresholds_db must be monotonically increasing."
             )
-    
+
         if np.any(np.diff(probabilities) > 0):
             raise ValueError(
                 "CCDF probabilities must be monotonically decreasing."
             )
-    
+
         if self.n_blocks <= 0:
             raise ValueError(
                 "n_blocks must be a positive integer."
@@ -1040,19 +1040,19 @@ class BERResult:
             raise ValueError(
                 "bit_errors cannot be negative."
             )
-    
+
         if self.total_bits <= 0:
             raise ValueError(
                 "total_bits must be positive."
             )
-    
+
         if self.bit_errors > self.total_bits:
             raise ValueError(
                 "bit_errors cannot exceed total_bits."
             )
-    
+
         expected_ber = self.bit_errors / self.total_bits
-    
+
         if not np.isclose(
             self.ber,
             expected_ber,
@@ -1062,7 +1062,7 @@ class BERResult:
             raise ValueError(
                 "BER is inconsistent with bit_errors / total_bits."
             )
-    
+
         if self.snr_db is not None:
             validate_snr_db(self.snr_db)
 
@@ -1093,17 +1093,17 @@ class EVMResult:
             raise ValueError(
                 "rms_evm cannot be negative."
             )
-    
+
         if self.peak_evm < 0.0:
             raise ValueError(
                 "peak_evm cannot be negative."
             )
-    
+
         if self.peak_evm < self.rms_evm:
             raise ValueError(
                 "peak_evm cannot be smaller than rms_evm."
             )
-    
+
         if not np.isclose(
             self.rms_evm_percent,
             self.rms_evm * 100.0,
@@ -1113,7 +1113,7 @@ class EVMResult:
             raise ValueError(
                 "rms_evm_percent is inconsistent with rms_evm."
             )
-    
+
         if not np.isclose(
             self.peak_evm_percent,
             self.peak_evm * 100.0,
@@ -1149,42 +1149,42 @@ class PSDResult:
             raise ValueError(
                 "frequencies must be a 1-D array."
             )
-    
+
         if self.psd_db.ndim != 1:
             raise ValueError(
                 "psd_db must be a 1-D array."
             )
-    
+
         if len(self.frequencies) != len(self.psd_db):
             raise ValueError(
                 "frequencies and psd_db must have the same length."
             )
-    
+
         if len(self.frequencies) == 0:
             raise ValueError(
                 "PSD result cannot be empty."
             )
-    
+
         if not np.all(np.isfinite(self.frequencies)):
             raise ValueError(
                 "frequencies must contain finite values."
             )
-    
+
         if not np.all(np.isfinite(self.psd_db)):
             raise ValueError(
                 "psd_db must contain finite values."
             )
-    
+
         validate_positive_integer(
             self.nperseg,
             "nperseg",
         )
-    
+
         if self.noverlap < 0:
             raise ValueError(
                 "noverlap cannot be negative."
             )
-    
+
         if self.noverlap >= self.nperseg:
             raise ValueError(
                 "noverlap must be smaller than nperseg."
@@ -1269,25 +1269,25 @@ class ConfigSnapshot:
     fft_normalization: FFTNormalization = FFTNormalization.UNITARY
     mapping_type: MappingType = MappingType.SYMMETRIC
     extra: Dict[str, Any] = field(default_factory=dict)
-    def __post_init__(self) -> None:                
+    def __post_init__(self) -> None:
         validate_fft_size(self.fft_size)
         validate_oversampling(self.oversampling_factor)
-    
+
         validate_positive_integer(
             self.active_subcarriers,
             "active_subcarriers",
         )
-    
+
         validate_positive_integer(
             self.data_subcarriers,
             "data_subcarriers",
         )
-    
+
         if self.pilot_subcarriers < 0:
             raise ValueError(
                 "pilot_subcarriers cannot be negative."
             )
-    
+
         if self.active_subcarriers != (
             self.pilot_subcarriers +
             self.data_subcarriers
@@ -1296,27 +1296,27 @@ class ConfigSnapshot:
                 "active_subcarriers must equal "
                 "pilot_subcarriers + data_subcarriers."
             )
-    
+
         if self.active_subcarriers > self.fft_size:
             raise ValueError(
                 "active_subcarriers cannot exceed fft_size."
             )
-    
+
         validate_positive_integer(
             self.cyclic_prefix_length + 1,
             "cyclic_prefix_length + 1",
         )
-    
+
         if self.cyclic_prefix_length > self.fft_size:
             raise ValueError(
                 "cyclic_prefix_length cannot exceed fft_size."
             )
-    
+
         validate_positive_integer(
             self.random_seed,
             "random_seed",
         )
-    
+
         validate_positive_integer(
             self.ofdm_blocks,
             "ofdm_blocks",
@@ -1368,12 +1368,12 @@ class SimulationMetadata:
             self.seed,
             "seed",
         )
-    
+
         validate_positive_integer(
             self.n_ofdm_symbols,
             "n_ofdm_symbols",
         )
-    
+
         validate_fft_size(self.fft_size)
         validate_oversampling(self.oversampling)
     def to_dict(self) -> Dict[str, Any]:
@@ -1595,14 +1595,16 @@ def validate_oversampling(L: int) -> None:
 
 def db_to_linear(db: float) -> float:
     """Convert a value from decibels to linear scale."""
-    return 10.0 ** (db / 10.0)
+    return float(10.0 ** (float(db) / 10.0))
 
 
 def linear_to_db(linear: float) -> float:
     """Convert a linear power ratio to decibels."""
+    linear = float(linear)
     if linear <= 0.0:
         raise ValueError("Cannot convert non-positive value to dB.")
-    return 10.0 * np.log10(linear)
+    return float(10.0 * np.log10(linear))
+
 
 
 def safe_mean_power(x: ComplexArray) -> float:
@@ -1648,11 +1650,11 @@ def make_papr_result(
     """
     papr_lin, peak_p, avg_p, peak_idx = compute_papr_linear(x)
     return PAPRResult(
-        papr_linear=papr_lin,
-        papr_db=linear_to_db(papr_lin),
-        peak_power=peak_p,
-        average_power=avg_p,
-        peak_index=peak_idx,
+        papr_linear=float(papr_lin),
+        papr_db=float(linear_to_db(papr_lin)),
+        peak_power=float(peak_p),
+        average_power=float(avg_p),
+        peak_index=int(peak_idx),
         cp_excluded=cp_excluded,
         n_samples_used=int(x.size),
     )
