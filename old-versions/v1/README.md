@@ -28,17 +28,7 @@ where:
 
 The optimization should **not simply minimize reconstruction error**, because a conventional autoencoder could reconstruct the original high-PAPR waveform almost perfectly. Instead, the loss function can combine several objectives:
 
-$$
-\mathcal{L}
-=
-\lambda_1\mathcal{L}_{reconstruction}
-+
-\lambda_2\mathcal{L}_{PAPR}
-+
-\lambda_3\mathcal{L}_{distortion}
-+
-\lambda_4\mathcal{L}_{EVM}
-$$
+$$\mathcal{L}=\lambda_1\mathcal{L}_{reconstruction}+\lambda_2\mathcal{L}_{PAPR}+\lambda_3\mathcal{L}_{distortion}+\lambda_4\mathcal{L}_{EVM}$$
 
 Potentially:
 
