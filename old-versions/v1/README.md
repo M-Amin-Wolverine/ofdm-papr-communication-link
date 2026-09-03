@@ -20,8 +20,8 @@ $$
 
 where:
 
-* \(x[n]\) = original time-domain OFDM signal
-* \(\hat{x}[n]\) = PAPR-reduced OFDM signal
+* $$\(x[n]\)$$ = original time-domain OFDM signal
+* $$\(\hat{x}[n]\)$$ = PAPR-reduced OFDM signal
 * Encoder = extracts a compact representation of the OFDM waveform
 * Latent space = learned representation of signal characteristics
 * Decoder = reconstructs a waveform with reduced peaks
