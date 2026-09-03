@@ -173,11 +173,9 @@ class PAPRProcessResult:
                 "method must be an instance of PAPRMethod."
             )
 
-        if self.method is not PAPRMethod.NONE:
-            raise ValueError(
-                "PAPRProcessResult in papr_methods.none must use "
-                "PAPRMethod.NONE."
-            )
+        # Intentionally accept any PAPRMethod so that other modules
+        # (clipping, SLM, ...) can reuse this common result container.
+        # The specific method identity is still recorded in self.method.
 
         if not isinstance(self.meta, dict):
             raise TypeError(
