@@ -1,4 +1,3 @@
-```python
 """
 Frequency-domain equalization
 =============================
