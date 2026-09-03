@@ -123,7 +123,7 @@ def run_full_link(
     # ------------------------------------------------------------------
     # TX
     # ------------------------------------------------------------------
-    source_bits = generate_random_bits(n_bits, rng=rng_src)
+    source_bits = generate_random_bits(n_bits, seed=seed, rng=rng_src)
     # Stage-1 identity coding / interleaving
     coded_bits = source_bits.copy()
     interleaved_bits = coded_bits.copy()
