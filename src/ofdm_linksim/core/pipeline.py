@@ -294,6 +294,8 @@ BitsStage: TypeAlias = Callable[..., BitArray]
 
 SymbolStage: TypeAlias = Callable[..., ComplexArray]
 
+ModulationStage: TypeAlias = Callable[..., ComplexArray]
+
 SourceStage: TypeAlias = Callable[..., BitArray]
 
 OFDMModulatorStage: TypeAlias = Callable[..., TransmitFrame]
@@ -1510,9 +1512,7 @@ class OFDMChain:
 
     def _run_equalizer(
         self,
-        synchronized: Any,
-        *,
-        **kwargs: Any,
+        synchronized: Any, **kwargs: Any,
     ) -> Any:
         """
         Execute frequency-domain equalization.
@@ -1542,9 +1542,7 @@ class OFDMChain:
 
     def _run_ofdm_demodulator(
         self,
-        equalized_input: Any,
-        *,
-        **kwargs: Any,
+        equalized_input: Any, **kwargs: Any,
     ) -> OFDMDemodResultLike:
         """
         Execute the OFDM demodulator.
@@ -1682,9 +1680,7 @@ class OFDMChain:
 
     def _run_demodulator(
         self,
-        symbols: ComplexArray,
-        *,
-        **kwargs: Any,
+        symbols: ComplexArray, **kwargs: Any,
     ) -> BitArray:
         """
         Convert equalized data symbols back to bits.
