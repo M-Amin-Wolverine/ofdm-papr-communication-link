@@ -104,7 +104,7 @@ def build_tx_frame(
     n_mod_symbols = n_data * n_blocks
     n_bits = n_mod_symbols * bps
 
-    bits = generate_random_bits(n_bits, rng=rng_src)
+    bits = generate_random_bits(n_bits, seed=seed, rng=rng_src)
     symbols = modulate(bits, mod=MOD)
 
     tx = modulate_ofdm(
