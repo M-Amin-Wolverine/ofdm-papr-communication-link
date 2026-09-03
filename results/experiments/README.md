@@ -80,29 +80,29 @@ No PAPR-reduction operation is applied. Consequently, the transmitter emits the 
 
 For an OFDM signal,
 
-\[
+$$$$\[
 x[n] = \frac{1}{\sqrt{N}}
 \sum_{k=0}^{N-1} X_k e^{j2\pi kn/N}
-\]
+\]$$$$
 
 many independently phased subcarriers can add constructively at particular time instants. This creates occasional high-amplitude peaks even when the average signal power is moderate.
 
 The PAPR is
 
-\[
+$$$$\[
 \mathrm{PAPR}
 =
 \frac{\max_n |x[n]|^2}
 {\mathbb{E}[|x[n]|^2]}
-\]
+\]$$$$
 
 and in dB:
 
-\[
+$$$$\[
 \mathrm{PAPR}_{dB}
 =
 10\log_{10}(\mathrm{PAPR})
-\]
+\]$$$$
 
 The 9.40 dB measurement is therefore the reference against which the reduction techniques should be evaluated.
 
@@ -121,13 +121,13 @@ The 9.40 dB measurement is therefore the reference against which the reduction t
 
 Clipping is the most direct approach:
 
-\[
+$$$$\[
 x_c[n] =
 \begin{cases}
 x[n], & |x[n]|\le A\\
 A e^{j\angle x[n]}, & |x[n]|>A
 \end{cases}
-\]
+\]$$$$
 
 where \(A\) is the clipping threshold.
 
@@ -172,21 +172,21 @@ SLM does not directly distort the OFDM waveform through amplitude clipping.
 
 Instead, multiple statistically equivalent candidates are constructed:
 
-\[
+$$$$\[
 X^{(u)}_k = X_k B^{(u)}_k
-\]
+\]$$$$
 
-where \(B^{(u)}_k\) is a phase sequence, commonly satisfying
+where $$\(B^{(u)}_k\)$$ is a phase sequence, commonly satisfying
 
-\[
+$$$$\[
 |B^{(u)}_k|=1.
-\]
+$$\]$$
 
 Each candidate produces a different time-domain waveform:
 
-\[
+$$$$\[
 x^{(u)} = \mathrm{IFFT}\{X^{(u)}\}
-\]
+\]$$$$
 
 and the candidate with minimum PAPR is selected.
 
@@ -224,10 +224,10 @@ The receiver must know which phase sequence was selected.
 
 Without that information, the receiver cannot reliably invert the transformation:
 
-\[
+$$$$\[
 \hat X_k =
 \hat X^{(u)}_k / B^{(u)}_k.
-\]
+\]$$$$
 
 Therefore, side-information recovery is essential for a fair end-to-end BER test.
 
@@ -250,23 +250,23 @@ Its weakness is computational complexity and side-information overhead.
 
 PTS divides the frequency-domain data into multiple subblocks:
 
-\[
+$$$$\[
 X =
 \sum_{v=1}^{V} X_v
-\]
+\]$$$$
 
 and applies phase factors:
 
-\[
+$$$$\[
 \tilde X =
 \sum_{v=1}^{V} b_v X_v
-\]
+\]$$$$
 
 where
 
-\[
+$$$$\[
 b_v = e^{j\phi_v}.
-\]
+\]$$$$
 
 The receiver must know the selected phase combination.
 
@@ -287,15 +287,15 @@ PTS can be very effective when sufficiently optimized.
 
 The search space grows rapidly with the number of subblocks and allowed phase factors. For example, if there are \(V\) subblocks and \(W\) possible phase factors, exhaustive search can approach:
 
-\[
+$$$$\[
 W^{V-1}
-\]
+\]$$$$
 
 candidate combinations after fixing one reference phase.
 
 Therefore, a lightweight implementation with:
 
-- small \(V\)
+- small $$\(V\)$$
 - few candidate phase factors
 - small candidate budget
 - simplified partitioning
@@ -314,18 +314,18 @@ It is not scientifically correct to conclude that PTS is worse than SLM in gener
 
 A proper sensitivity study should sweep:
 
-- \(V \in \{2,4,8,16\}\)
-- phase factors \(W \in \{2,4,8\}\)
+- $$\(V \in \{2,4,8,16\}\)$$
+- phase factors $$\(W \in \{2,4,8\}\)$$
 - adjacent / interleaved / pseudo-random partitioning
 - exhaustive vs. heuristic search
 
 and report:
 
-\[
+$$$$\[
 \text{PAPR reduction}
 \quad\text{vs.}\quad
 \text{number of candidates}
-\]
+\]$$$$
 
 This turns PTS into a meaningful complexity-performance study.
 
@@ -337,14 +337,14 @@ Tone Reservation uses dedicated subcarriers that do not carry information.
 
 Let the OFDM signal be decomposed as:
 
-\[
+$$$$\[
 x[n] = x_D[n] + x_R[n]
-\]
+\]$$$$
 
 where:
 
-- \(x_D[n]\) contains data-bearing tones
-- \(x_R[n]\) is generated using reserved tones
+- $$\(x_D[n]\)$$ contains data-bearing tones
+- $$\(x_R[n]\)$$ is generated using reserved tones
 
 The objective is to find a cancellation signal that reduces the peaks of \(x_D[n]\).
 
@@ -390,9 +390,9 @@ ACE reduces peaks by moving selected constellation points within permitted exten
 
 The basic idea is:
 
-\[
+$$$$\[
 X_k \rightarrow X_k + \Delta X_k
-\]
+\]$$$$
 
 subject to constellation-dependent constraints.
 
@@ -411,15 +411,15 @@ ACE is therefore substantially more effective than SLM and the current PTS/TR co
 
 The current result shows:
 
-\[
+$$$$\[
 9.40 \rightarrow 5.68\text{ dB}
-\]
+\]$$$$
 
 while
 
-\[
+$$$$\[
 7.7\% \rightarrow 23.5\%.
-\]
+\]$$$$
 
 This indicates that the implementation is achieving a strong reduction in peak amplitude by allowing relatively large constellation displacement.
 
@@ -513,15 +513,15 @@ That conclusion would be premature.
 
 Only **8 OFDM blocks** were tested. With a finite number of transmitted bits, zero observed errors means:
 
-\[
+$$$$\[
 \mathrm{BER}_{observed}=0
-\]
+\]$$$$
 
 not
 
-\[
+$$$$\[
 \mathrm{BER}_{true}=0.
-\]
+\]$$$$
 
 A statistically meaningful BER experiment requires many more transmitted bits.
 
@@ -544,23 +544,23 @@ A publication-grade evaluation should introduce Monte Carlo averaging.
 
 For each configuration:
 
-\[
+$$$$\[
 \bar M =
 \frac{1}{R}
 \sum_{r=1}^{R} M_r
-\]
+\]$$$$
 
-where \(R\) is the number of independent random trials.
+where $$\(R\)$$ is the number of independent random trials.
 
 For PAPR, reporting only the mean is also insufficient.
 
 The preferred representation is the **CCDF**:
 
-\[
+$$$$\[
 \mathrm{CCDF}(z)
 =
 P(\mathrm{PAPR}>z).
-\]
+\]$$$$
 
 This allows two algorithms to be compared across the complete tail behavior rather than at one observed maximum.
 
@@ -570,9 +570,9 @@ This allows two algorithms to be compared across the complete tail behavior rath
 
 For OFDM PAPR research, the most informative comparison is typically:
 
-\[
+$$$$\[
 P(\mathrm{PAPR}>z)
-\]
+\]$$$$
 
 versus \(z\) in dB.
 
@@ -587,9 +587,9 @@ Recommended curves:
 
 A useful reporting point is:
 
-\[
+$$$$\[
 \mathrm{PAPR}_{0.1\%}
-\]
+\]$$$$
 
 meaning the PAPR exceeded only 0.1% of the time.
 
@@ -705,9 +705,9 @@ A stronger experimental campaign should sweep:
 
 ## FFT size
 
-\[
+$$$$\[
 N \in \{64,128,256,512,1024,2048,4096,8192\}
-\]
+\]$$$$
 
 ## Modulation
 
@@ -719,17 +719,17 @@ N \in \{64,128,256,512,1024,2048,4096,8192\}
 
 ## Oversampling
 
-\[
+$$$$\[
 L \in \{1,2,4,8,16\}
-\]
+\]$$$$
 
 ## SNR
 
 For example:
 
-\[
+$$$$\[
 0,5,10,15,20,25,30\ \mathrm{dB}
-\]
+\]$$$$
 
 ## Channel
 
@@ -757,21 +757,21 @@ For every method, the simulator should eventually generate:
 
 ### Figure 1 — PAPR CCDF
 
-\[
+$$\[
 P(\mathrm{PAPR}>z)
-\]
+\]$$$$
 
 ### Figure 2 — BER vs. SNR
 
-\[
+$$\[
 BER(SNR)
-\]
+\]$$$$
 
 ### Figure 3 — EVM vs. SNR
 
-\[
+$$\[
 EVM(SNR)
-\]
+\]$$
 
 ### Figure 4 — PSD
 
@@ -789,11 +789,11 @@ Peak behavior before and after processing.
 
 For example:
 
-\[
+$$\[
 \text{computational cost}
 \quad\text{vs.}\quad
 \text{PAPR reduction}
-\]
+\]$$
 
 This final figure can be particularly valuable for a research paper.
 
@@ -805,7 +805,7 @@ A future experiment can optionally define a multi-objective score rather than se
 
 For example:
 
-\[
+$$\[
 J =
 w_P \cdot \mathrm{PAPR}
 +
@@ -816,7 +816,7 @@ w_B \cdot \mathrm{BER}
 w_C \cdot C
 +
 w_S \cdot S
-\]
+\]$$
 
 where:
 
@@ -838,9 +838,9 @@ The measured benchmark can be summarized as follows:
 
 **Clipping**
 
-\[
+$$\[
 9.40 \rightarrow 4.03\ \mathrm{dB}
-\]
+\]$$
 
 with a measurable EVM penalty.
 
@@ -848,9 +848,9 @@ with a measurable EVM penalty.
 
 **ACE**
 
-\[
+$$\[
 9.40 \rightarrow 5.68\ \mathrm{dB}
-\]
+\]$$
 
 but with a comparatively large EVM increase.
 
@@ -891,9 +891,9 @@ Verify:
 
 Investigate why TR produces:
 
-\[
+$$\[
 EVM=31.4\%
-\]
+\]$$
 
 and nonzero BER despite using reserved carriers.
 
@@ -910,8 +910,8 @@ Add configurable:
 
 Add configurable:
 
-- \(V\)
-- \(W\)
+- $$\(V\)
+- $$\(W\)
 - partition strategy
 - exhaustive search
 - iterative/heuristic search
@@ -938,13 +938,13 @@ There is no universally best method.
 
 The observed trade-off is approximately:
 
-\[
+$$\[
 \boxed{
 \text{Lower PAPR}
 \quad\Longleftrightarrow\quad
 \text{Distortion / Complexity / Overhead}
 }
-\]
+\]$$
 
 The current benchmark illustrates this directly:
 
@@ -956,5 +956,3 @@ The current benchmark illustrates this directly:
 - **NONE** remains indispensable as the reference baseline.
 
 The next scientific step is therefore **not simply to add more PAPR algorithms**. It is to make the existing comparison experimentally rigorous: Monte Carlo trials, PAPR CCDF, SNR sweeps, channel sweeps, oversampling, modulation sweeps, complexity accounting, PSD/ACLR analysis, and systematic parameter sensitivity.
-
-That transformation would move OFDM-PAPR-LinkSim from a functional simulator toward a reproducible **research-grade experimental framework** for studying the PAPR–distortion–complexity trade space.
