@@ -24,7 +24,7 @@ from ofdm_linksim.utils.random import source_rng, make_master_seed
 def generate_random_bits(
     n_bits: int,
     *,
-    seed: int,
+    seed: Optional[int] = None,
     rng: Optional[np.random.Generator] = None,
 ) -> BitArray:
     """
@@ -36,6 +36,7 @@ def generate_random_bits(
         Number of bits to generate (must be positive).
     seed :
         Master experiment seed. Used only when ``rng`` is not supplied.
+        Required when ``rng`` is None.
     rng :
         Optional pre-created Generator (normally the ``source`` stream).
         When provided, ``seed`` is ignored for generation.
@@ -49,6 +50,8 @@ def generate_random_bits(
         raise ValueError(f"n_bits must be a positive integer, got {n_bits}")
 
     if rng is None:
+        if seed is None:
+            raise ValueError("Either rng or seed must be provided.")
         rng = source_rng(make_master_seed(seed))
 
     bits = rng.integers(0, 2, size=n_bits, dtype=np.uint8)
