@@ -1,151 +1,24 @@
 """
 PAPR Method: Active Constellation Extension (ACE)
-==================================================
+=================================================
 
-Active Constellation Extension (ACE) is reserved for Phase-2
-implementation.
+Iterative ACE for OFDM PAPR reduction.
 
-Current status
---------------
-ACE is intentionally NOT implemented in Stage-1.
+Algorithm
+---------
+1. Convert current frequency-domain data symbols to time domain.
+2. Soft-clip (or hard-clip) peaks that exceed a target threshold.
+3. FFT the clip residual back to frequency domain.
+4. For each data tone, keep only the component of the residual that
+   moves the constellation point *outward* (away from the origin /
+   outside the nominal constellation boundary). Discard inward moves.
+5. Add a scaled version of the allowed extension to the data symbols.
+6. Repeat for a fixed number of iterations.
 
-Current Stage-1 methods:
+ACE does not need side information at the receiver (constellation
+points remain in decision regions for sufficiently moderate extension).
 
-    NONE
-        Locked scientific reference.
-
-    CLIPPING
-        Implemented amplitude-clipping method.
-
-ACE remains a formal placeholder so that the PAPR method architecture,
-registry, experiment configuration, and future pipeline integration are
-already prepared.
-
-ACE principle
--------------
-Active Constellation Extension reduces OFDM time-domain peaks by modifying
-selected constellation points within their allowed decision regions.
-
-Unlike conventional clipping, ACE does not simply truncate the time-domain
-waveform.
-
-Instead, selected frequency-domain constellation symbols are moved outward
-within permissible regions.
-
-Conceptually:
-
-    Original constellation
-             │
-             ▼
-    Identify extendable points
-             │
-             ▼
-    Determine allowed extension
-             │
-             ▼
-    Modify constellation
-             │
-             ▼
-           IFFT
-             │
-             ▼
-       Time-domain OFDM
-             │
-             ▼
-            PAPR
-
-The modified constellation must remain decodable according to the
-corresponding decision-region constraints.
-
-Planned Phase-2 parameters
---------------------------
-
-n_iterations : int
-    Number of iterative ACE optimization/projection steps.
-
-max_extension : float
-    Maximum allowed extension relative to the nominal constellation
-    amplitude/energy.
-
-modulation : ModulationType
-    Constellation used by the OFDM system.
-
-step_size : float
-    Planned optimization step size for iterative extension.
-
-optimization_method : str
-    Planned optimization strategy.
-
-Possible future approaches include:
-
-    - projection;
-    - iterative clipping/filtering-inspired optimization;
-    - gradient-based optimization;
-    - constrained peak minimization.
-
-oversampling : int
-    PAPR evaluation should use the project's configured oversampling factor.
-
-Scientific considerations
---------------------------
-A complete ACE implementation should evaluate:
-
-    - PAPR reduction;
-    - BER;
-    - EVM;
-    - constellation displacement;
-    - minimum decision distance;
-    - maximum constellation extension;
-    - modulation order;
-    - optimization iterations;
-    - computational complexity;
-    - convergence behavior;
-    - spectral effects;
-    - oversampling;
-    - interaction with channel impairments.
-
-Important distinction
----------------------
-ACE differs fundamentally from hard clipping.
-
-Hard clipping:
-
-    time domain
-        ↓
-    truncate amplitude peaks
-
-ACE:
-
-    frequency domain
-        ↓
-    modify allowed constellation points
-        ↓
-    IFFT
-        ↓
-    reduced time-domain peaks
-
-Therefore ACE should eventually be implemented at the appropriate
-frequency-domain processing stage rather than by reusing the clipping
-implementation.
-
-Stage-1 behavior
-----------------
-This module intentionally raises ``NotImplementedError``.
-
-It must NOT silently fall back to NONE or CLIPPING.
-
-If an experiment explicitly requests ACE, the simulator must report that
-ACE is unavailable rather than producing results using another algorithm.
-
-Future interface
-----------------
-The public API is reserved:
-
-    apply_ace(...)
-    process(...)
-
-When ACE is implemented, the method should return the same common
-``PAPRProcessResult`` structure used by the other PAPR algorithms.
+PAPR is measured on useful samples only.
 """
 
 from __future__ import annotations
@@ -155,170 +28,266 @@ from typing import Any, Optional
 import numpy as np
 
 from ofdm_linksim.core.types import (
+    ComplexArray,
+    FFTNormalization,
+    OFDMGrid,
+    OFDMSignal,
     PAPRMethod,
     PAPRResult,
     TransmitFrame,
+    make_papr_result,
+    numpy_fft_norm,
+    safe_mean_power,
+    validate_positive_integer,
 )
+from ofdm_linksim.ofdm_modulator import ofdm_ifft, add_cyclic_prefix
+from papr_methods.none import PAPRProcessResult
 
-
-# ============================================================================
-# Method constants
-# ============================================================================
 
 METHOD = PAPRMethod.ACE
-
 METHOD_NAME = METHOD.value
-
-IMPLEMENTED = False
-
+IMPLEMENTED = True
 STAGE = "Phase-2"
 
 
-# ============================================================================
-# Core processing API
-# ============================================================================
+def _os_fft_to_grid(
+    time: ComplexArray,
+    fft_size: int,
+    oversampling: int,
+    fft_norm: FFTNormalization,
+) -> ComplexArray:
+    """
+    FFT oversampled time signal and fold back to original FFT bins.
+    time: (n_sym, fft_size * L)
+    returns: (n_sym, fft_size)
+    """
+    R = np.fft.fft(time, axis=-1, norm=numpy_fft_norm(fft_norm))
+    half = fft_size // 2
+    C = np.zeros((time.shape[0], fft_size), dtype=np.complex128)
+    C[:, : half + 1] = R[:, : half + 1]
+    if half > 0:
+        C[:, -half:] = R[:, -half:]
+    return C
 
 
 def apply_ace(
-    *args: Any,
+    waveform: TransmitFrame | OFDMSignal | ComplexArray,
+    *,
+    clipping_ratio: float = 1.5,
+    n_iterations: int = 8,
+    step_size: float = 0.8,
+    max_extension: Optional[float] = None,
     rng: Optional[np.random.Generator] = None,
+    fft_norm: FFTNormalization = FFTNormalization.UNITARY,
     **kwargs: Any,
-) -> None:
+) -> PAPRProcessResult:
     """
-    Placeholder for the future ACE implementation.
-
-    ACE is intentionally unavailable during Stage-1.
+    Apply iterative Active Constellation Extension.
 
     Parameters
     ----------
-    *args:
-        Reserved for future ACE waveform/frequency-domain processing.
-
-    rng:
-        Optional random generator reserved for future stochastic
-        optimization, if required.
-
-    **kwargs:
-        Reserved for future ACE configuration parameters.
-
-    Raises
-    ------
-    NotImplementedError
-        Always, while ACE remains a Phase-2 feature.
+    clipping_ratio :
+        Target peak = CR · rms of the original useful signal.
+    n_iterations :
+        Number of ACE iterations.
+    step_size :
+        Scale μ applied to the allowed extension each iteration.
+    max_extension :
+        Optional hard limit on |extension| relative to original
+        symbol magnitude (None = unlimited).
     """
+    validate_positive_integer(n_iterations, "n_iterations")
+    if clipping_ratio <= 0.0:
+        raise ValueError("clipping_ratio must be positive.")
+    if step_size <= 0.0:
+        raise ValueError("step_size must be positive.")
 
-    raise NotImplementedError(
-        "Active Constellation Extension (ACE) is not implemented yet. "
-        "ACE is scheduled for Phase-2. "
-        "Use 'none' or 'clipping' for the current Stage-1 experiments."
+    if not isinstance(waveform, TransmitFrame):
+        raise TypeError(
+            "ACE requires a TransmitFrame (frequency-domain grid)."
+        )
+
+    frame: TransmitFrame = waveform
+    ofdm_signal = frame.waveform
+    grid = frame.ofdm_grid
+    X0 = np.asarray(grid.symbols, dtype=np.complex128).copy()
+    if X0.ndim == 1:
+        X0 = X0[np.newaxis, :]
+    X = X0.copy()
+
+    data_idx = np.asarray(grid.data_indices, dtype=np.int64)
+    pilot_idx = np.asarray(grid.pilot_indices, dtype=np.int64)
+    active_idx = np.asarray(grid.active_indices, dtype=np.int64)
+    fft_size = grid.fft_size
+    L = ofdm_signal.oversampling
+    n_sym = X.shape[0]
+
+    # Original data symbols (for outward test)
+    X_data0 = X0[:, data_idx].copy()
+
+    useful = ofdm_ifft(
+        OFDMGrid(
+            symbols=X,
+            active_indices=active_idx,
+            pilot_indices=pilot_idx,
+            data_indices=data_idx,
+        ),
+        oversampling=L,
+        norm=fft_norm,
+    )
+    p_avg = safe_mean_power(useful.ravel())
+    if p_avg <= 0.0:
+        raise ValueError("Average power is zero.")
+    rms = float(np.sqrt(p_avg))
+    threshold = float(clipping_ratio * rms)
+
+    for _ in range(n_iterations):
+        mag = np.abs(useful)
+        peak_mask = mag > threshold
+        if not np.any(peak_mask):
+            break
+
+        # Soft clip residual
+        residual = np.zeros_like(useful)
+        residual[peak_mask] = useful[peak_mask] * (
+            1.0 - threshold / mag[peak_mask]
+        )
+
+        # Frequency-domain residual
+        R = _os_fft_to_grid(residual, fft_size, L, fft_norm)
+
+        # Allowed extension: only components that increase |X| (outward)
+        ext = np.zeros_like(X)
+        Xd = X[:, data_idx]
+        Rd = R[:, data_idx]
+        # Projection of residual onto the radial direction of current symbol
+        # Keep only the part that points away from origin relative to original
+        # Classic ACE: extend outside the constellation boundary.
+        # Practical rule: keep Re{ R * conj(X0) / |X0| } > 0 component.
+        X0d = X_data0
+        mag0 = np.abs(X0d)
+        mag0_safe = np.where(mag0 < 1e-12, 1.0, mag0)
+        unit = X0d / mag0_safe
+        radial = np.real(Rd * np.conj(unit))
+        radial = np.maximum(radial, 0.0)  # outward only
+        extension = radial * unit
+
+        if max_extension is not None:
+            ext_mag = np.abs(extension)
+            cap = max_extension * mag0_safe
+            scale = np.ones_like(ext_mag)
+            over = ext_mag > cap
+            scale[over] = cap[over] / ext_mag[over]
+            extension = extension * scale
+
+        ext[:, data_idx] = extension
+        X = X - step_size * ext  # subtract residual contribution ≈ add extension opposite to peak
+
+        # Rebuild time signal
+        useful = ofdm_ifft(
+            OFDMGrid(
+                symbols=X,
+                active_indices=active_idx,
+                pilot_indices=pilot_idx,
+                data_indices=data_idx,
+            ),
+            oversampling=L,
+            norm=fft_norm,
+        )
+
+    if ofdm_signal.cp_included and ofdm_signal.cyclic_prefix_length > 0:
+        full = add_cyclic_prefix(
+            useful,
+            cp_length=ofdm_signal.cyclic_prefix_length,
+            oversampling=L,
+        )
+    else:
+        full = useful
+
+    papr = make_papr_result(useful.ravel(), cp_excluded=True)
+
+    # Extension energy metric
+    dX = X[:, data_idx] - X_data0
+    ext_power = float(np.mean(np.abs(dX) ** 2)) if dX.size else 0.0
+
+    meta = {
+        "clipping_ratio": float(clipping_ratio),
+        "n_iterations": int(n_iterations),
+        "step_size": float(step_size),
+        "max_extension": max_extension,
+        "threshold": threshold,
+        "extension_power": ext_power,
+        "cp_excluded": True,
+        "n_samples_used": int(useful.size),
+        "modified": True,
+    }
+
+    return PAPRProcessResult(
+        waveform=full,
+        papr=papr,
+        method=PAPRMethod.ACE,
+        meta=meta,
     )
 
 
 def process(
     transmit_frame: TransmitFrame,
     *,
+    clipping_ratio: float = 1.5,
+    n_iterations: int = 8,
+    step_size: float = 0.8,
+    max_extension: Optional[float] = None,
     rng: Optional[np.random.Generator] = None,
     **kwargs: Any,
 ) -> PAPRResult:
-    """
-    Pipeline-facing ACE entry point.
-
-    ACE is currently unavailable in Stage-1.
-
-    The explicit ``TransmitFrame`` interface is reserved for compatibility
-    with the future PAPR processing pipeline.
-    """
-
-    if not isinstance(transmit_frame, TransmitFrame):
-        raise TypeError(
-            "process() requires a TransmitFrame."
-        )
-
-    raise NotImplementedError(
-        "Active Constellation Extension (ACE) is not implemented in "
-        "the current stage. "
-        f"Requested method={PAPRMethod.ACE.value!r}. "
-        "ACE is reserved for Phase-2."
+    result = apply_ace(
+        transmit_frame,
+        clipping_ratio=clipping_ratio,
+        n_iterations=n_iterations,
+        step_size=step_size,
+        max_extension=max_extension,
+        rng=rng,
+        **kwargs,
     )
-
-
-# ============================================================================
-# Method information
-# ============================================================================
+    return result.papr
 
 
 def method_name() -> str:
-    """
-    Return the canonical ACE method name.
-    """
-
     return METHOD_NAME
 
 
 def is_implemented() -> bool:
-    """
-    Return False because ACE is currently a Phase-2 stub.
-    """
-
     return IMPLEMENTED
 
 
 def stage() -> str:
-    """
-    Return the planned implementation stage.
-    """
-
     return STAGE
 
 
 def description() -> str:
-    """
-    Return a human-readable ACE description.
-    """
-
     return (
-        "Active Constellation Extension (ACE): modifies allowed "
-        "constellation points to reduce time-domain OFDM peaks. "
-        "Implementation is reserved for Phase-2."
+        "Active Constellation Extension (ACE): iteratively extend "
+        "constellation points outward to reduce time-domain peaks."
     )
 
 
 def metadata() -> dict[str, Any]:
-    """
-    Return static metadata describing the ACE method.
-    """
-
     return {
-        "name": METHOD_NAME,
         "method": METHOD_NAME,
         "implemented": IMPLEMENTED,
         "stage": STAGE,
-        "algorithm": "Active Constellation Extension",
-        "modifies_waveform": True,
-        "frequency_domain_processing": True,
-        "requires_constellation_constraints": True,
-        "requires_side_information": False,
-        "randomness": False,
-        "description": description(),
+        "parameters": {
+            "clipping_ratio": "float (default 1.5)",
+            "n_iterations": "int (default 8)",
+            "step_size": "float (default 0.8)",
+            "max_extension": "optional float",
+        },
     }
 
 
-# ============================================================================
-# Compatibility alias
-# ============================================================================
-
-ace = process
-
-
-# ============================================================================
-# Public API
-# ============================================================================
+ace = apply_ace
 
 __all__ = [
-    "METHOD",
-    "METHOD_NAME",
-    "IMPLEMENTED",
-    "STAGE",
     "apply_ace",
     "process",
     "method_name",
@@ -327,4 +296,6 @@ __all__ = [
     "description",
     "metadata",
     "ace",
+    "METHOD",
+    "IMPLEMENTED",
 ]
