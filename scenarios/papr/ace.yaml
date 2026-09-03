@@ -1,0 +1,31 @@
+scenario:
+  name: "papr_ace"
+  version: "1.0"
+  status: "active"
+  reference: false
+  description: "Active Constellation Extension (ACE)"
+  papr_reduction: "ace"
+
+extends: "configs/baseline.yaml"
+
+papr:
+  method: "ace"
+  include_cp: false
+  analysis_enabled: true
+  ace:
+    clipping_ratio: 1.4
+    n_iterations: 10
+    step_size: 0.7
+
+channel:
+  model: "AWGN"
+  enabled: true
+
+simulation:
+  mode: "development"
+  ofdm_blocks: 10000
+
+random:
+  seed: 42
+  deterministic: true
+  centralized: true
